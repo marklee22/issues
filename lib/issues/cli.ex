@@ -1,5 +1,7 @@
 defmodule Issues.CLI do
 
+  import Issues.TableFormatter, only: [ print_table_for_columns: 2 ]
+
   @default_count 4
 
   @moduledoc """
@@ -8,6 +10,12 @@ defmodule Issues.CLI do
   """
 
   def run(argv) do
+    argv
+      |> parse_args
+      |> process
+  end
+
+  def main(argv) do
     argv
       |> parse_args
       |> process
@@ -44,7 +52,7 @@ defmodule Issues.CLI do
     |> decode_response
     |> sort_into_ascending_order
     |> Enum.take(count)
-    |> Issues.TableFormatter.print_table_for_columns(["number", "created_at", "title"])
+    |> print_table_for_columns(["number", "created_at", "title"])
   end
 
   def decode_response({:ok, body}), do: body
